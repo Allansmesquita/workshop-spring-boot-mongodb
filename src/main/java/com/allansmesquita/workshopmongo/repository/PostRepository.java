@@ -1,5 +1,6 @@
 package com.allansmesquita.workshopmongo.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -18,4 +19,6 @@ public interface PostRepository extends MongoRepository<Post, String> {
 													// quer buscar)+containing faz com que o spring data monte
 													// automaticamente a consulta. =>QUERRY METHODS ** "IgnoreCase" faz com que seja ignorado capslock. 
 	
+	@Query("{ $and: [ { date: {$gte: ?1} }, { date: { $lte: ?2} } , { $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] } ] }")	
+	List<Post> fullSearch(String text, Date minDate, Date maxDate);
 }
